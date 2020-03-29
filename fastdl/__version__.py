@@ -1,0 +1,5 @@
+__version__ = "0.1"
+__author__ = "Rubén Salas"
+__description__ = "Download and extract files fast and easily"
+__license__ = "MIT License"
+__url__ = "https://github.com/r-salas/fastdl"
