@@ -12,6 +12,29 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 
 class Parallel:
+    """
+    Parallel downloads done easily.
+
+    Parameters
+    -----------
+    prefer: str
+        One of the following: "threads" or "processes".
+        For activities with high I/O such as a download to a file, it is recommended threads.
+    max_workers: str
+        Max workers to use. By default, the maximum workers will the number of available CPUs.
+
+    Examples
+    --------
+    >>> with fastdl.Parallel(prefer="threads") as p:
+            downloads = []
+
+            for url in URLS:
+                download = p.download(url, dir_prefix="downloads", extract=True)
+                downloads.append(download)
+
+            for download in downloads:
+                file_path = download.get(timeout=5)  # wait until is fully downloaded
+    """
 
     def __init__(self, prefer="threads", max_workers=None):
         if prefer == "threads":
@@ -30,6 +53,21 @@ class Parallel:
         self._pool = pool_cls(max_workers, initializer=tqdm.set_lock, initargs=[tqdm.get_lock()])
 
     def download(self, *args, **kwargs):
+        """
+        Download file in parallel. The parameters will be the `fastdl.download()` parameters.
+
+        Parameters
+        ------------
+        *args:
+            Same as `fastdl.download()`
+        **kwargs:
+            Same as `fastdl.download()`
+
+        Returns
+        --------
+        task: AsyncResult
+            Parallel task. You should call `get()` method to wait until download is finished.
+        """
         return self._pool.apply_async(download, args=args, kwds=kwargs)
 
     def close(self):

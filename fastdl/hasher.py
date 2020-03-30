@@ -9,25 +9,26 @@ import hashlib
 
 def hash_file(fpath, algorithm="sha256", chunk_size=65535):
     """
-    Calculates a file sha256 or md5 hash.
+    Calculates a file hash.
 
     Parameters
     ------------
-        fpath: path to the file being validated
-        algorithm: hash algorithm, one of "auto", "sha256", or "md5".
-                The default "auto" detects the hash algorithm in use.
-        chunk_size: Bytes to read at a time, important for large files.
-
-    Examples
-    -----------
-    ```python
-    >>> hash_file("/path/to/file.zip")
-    e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-    ```
+    fpath: str
+        Path to the file being validated
+    algorithm: str
+        Hash algorithm. One of the following: "sha256", "sha512", "sha1", "md5"
+    chunk_size: int
+        Bytes to read at a time
 
     Returns
     ----------
-        The file hash
+    file_hash: str
+        The resulting file hash.
+
+    Returns
+    -------
+    file_hash: str
+        Resulting file hash
     """
     hasher_map = {
         "sha256": hashlib.sha256,
@@ -53,6 +54,20 @@ def hash_file(fpath, algorithm="sha256", chunk_size=65535):
 def validate_file(fpath, file_hash, hash_algorithm="auto", chunk_size=65535):
     """
     Validate a file against a file hash.
+
+    Parameters
+    ------------
+    fpath: str
+        Path to the file to validate
+    file_hash: str
+        File hash to validate
+    hash_algorithm: str
+        Hash algorithm to validate file. One of the following: "sha256", "sha512", "sha1", "md5"
+        and "auto" (to infer algorithm). By default, it will try to infer algorithm according to length of file hash.
+
+    Returns
+    --------
+    bool
     """
     if hash_algorithm == "auto":
         num_chars = len(file_hash)

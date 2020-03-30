@@ -14,13 +14,33 @@ from os.path import isfile, join
 def can_extract(file_path):
     """
     Whether or not fastdl can extract this file.
+
+    Parameters
+    -----------
+    file_path: str
+        File path to check.
+
+    Returns
+    --------
+    bool
     """
     return _to_extractor(file_path) is not None
 
 
 def extract_file(file_path, extract_dir=".", progressbar=True, force=False):
     """
-    Unpack `file_path` to `extract_dir`.
+    Extract file to directory.
+
+    Parameters
+    ------------
+    file_path: str
+        File path to extract
+    extract_dir: str
+        Extraction directory
+    progressbar: bool
+        Whether or not show progressbar.
+    force: bool
+        Whether or not force extraction if file already exists
     """
     extractor = _to_extractor(file_path)
 

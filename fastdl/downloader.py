@@ -19,6 +19,46 @@ from urllib.error import ContentTooShortError
 
 def download(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 * 8, file_hash=None, hash_algorithm="auto",
              extract=False, extract_dir=None, progressbar=True, force_download=False, force_extraction=False):
+    """
+    Download files with support for extractions and hash validations.
+
+    Parameters
+    ------------
+    url: str
+        Url to download
+    fname: str, optional
+        File name for the download file. If not provided, it will try to infer filename using
+        info from the server or the url. Can be an absolute path.
+    dir_prefix: str
+        Directory to download files (if `fname` is not an absolute path). By default, it will
+        download files to current working directory.
+    headers: dict, optional
+        Dictionnary of headers to send during request.
+    blocksize: int
+        Response blocks to read / write for every iteration
+    file_hash: str, optional
+        File hash to validate file. If hash doesn't match, it will re-download file.
+    hash_algorithm: str
+        Hash algorithm to validate file. Currently supported: "sha256", "sha1", "sha512", "md5".
+        By default, it will try to infer algorithm according to the number of characters of the file
+        hash.
+    extract: str
+        Whether or not the file should be extracted. The currently supported extensions are the
+        following: "zip", "tar", "tar.gz", "tar.bz2"
+    extract_dir: str
+        Directory to extract files. By default, the directory will be the same as the download file.
+    progressbar: str
+        Whether or not show progress bar.
+    force_download: bool
+        Whether or not force download if file already exists.
+    force_extraction: bool
+        Whether or not force extraction if file already exists.
+
+    Returns
+    --------
+    file_path: str
+        Download file path
+    """
     file_path = _urlretrieve(url, fname=fname, dir_prefix=dir_prefix, headers=headers, blocksize=blocksize,
                              progressbar=progressbar, file_hash=file_hash, hash_algorithm=hash_algorithm,
                              force_download=False)
