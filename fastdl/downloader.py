@@ -7,6 +7,8 @@
 import os
 import warnings
 
+from .config import conf
+
 from .utils import splitext
 from .hasher import validate_file
 from .extractor import extract_file, can_extract
@@ -59,7 +61,8 @@ def download(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 * 8, 
     file_path: str
         Download file path
     """
-    file_path = _urlretrieve(url, fname=fname, dir_prefix=dir_prefix, headers=headers, blocksize=blocksize,
+    if dir_prefix is None:
+        dir_prefix = conf["default_dir_prefix"]
                              progressbar=progressbar, file_hash=file_hash, hash_algorithm=hash_algorithm,
                              force_download=False)
 
