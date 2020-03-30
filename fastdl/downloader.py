@@ -33,7 +33,9 @@ def download(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 * 8, 
         warnings.warn("`extract=True` but {} can't be extracted".format(file_path))
         return file_path
 
-    return extract_file(file_path, extract_dir, force=force_extraction, progressbar=progressbar)
+    extract_file(file_path, extract_dir, force=force_extraction, progressbar=progressbar)
+
+    return file_path
 
 
 def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 * 8, progressbar=True, reporthook=None,
