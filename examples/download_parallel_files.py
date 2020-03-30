@@ -17,7 +17,7 @@ URLS = [
 with fastdl.Parallel(prefer="threads") as p:
     downloads = []
 
-    for url in URLS[:1]:
+    for url in URLS:
         download = p.download(url, dir_prefix="downloads", extract=True)
         downloads.append(download)
 
