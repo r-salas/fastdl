@@ -19,8 +19,9 @@ from urllib.request import urlopen, Request
 from urllib.error import ContentTooShortError
 
 
-def download(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 * 8, file_hash=None, hash_algorithm="auto",
-             extract=False, extract_dir=None, progressbar=True, force_download=False, force_extraction=False):
+def download(url, fname=None, dir_prefix=None, subdir_prefix="", headers=None, blocksize=1024 * 8, file_hash=None,
+             hash_algorithm="auto", extract=False, extract_dir=None, progressbar=True, force_download=False,
+             force_extraction=False):
     """
     Download files with support for extractions and hash validations.
 
@@ -34,6 +35,9 @@ def download(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 * 8, 
     dir_prefix: str
         Directory to download files (if `fname` is not an absolute path). By default, it will
         download files to current working directory.
+    subdir_prefix: str
+        Subdirectory inside `dir_prefix` to store downloaded file.
+        Useful if configuration for "default_dir_prefix" is changed.
     headers: dict, optional
         Dictionnary of headers to send during request.
     blocksize: int
@@ -63,6 +67,10 @@ def download(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 * 8, 
     """
     if dir_prefix is None:
         dir_prefix = conf["default_dir_prefix"]
+
+    fulldir_prefix = os.path.join(dir_prefix, subdir_prefix)
+
+    file_path = _urlretrieve(url, fname=fname, dir_prefix=fulldir_prefix, headers=headers, blocksize=blocksize,
                              progressbar=progressbar, file_hash=file_hash, hash_algorithm=hash_algorithm,
                              force_download=False)
 
@@ -71,6 +79,8 @@ def download(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 * 8, 
 
     if extract_dir is None:
         extract_dir, _ = splitext(file_path)
+
+    extract_dir = os.path.expanduser(extract_dir)
 
     if not can_extract(file_path):
         warnings.warn("`extract=True` but {} can't be extracted".format(file_path))
@@ -89,6 +99,8 @@ def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 *
     """
     if headers is None:
         headers = {}
+
+    dir_prefix = os.path.expanduser(dir_prefix)
 
     request = Request(url, headers=headers)
 

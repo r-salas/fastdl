@@ -18,13 +18,13 @@ with fastdl.Parallel(prefer="threads") as p:
     downloads = []
 
     for url in URLS:
-        download = p.download(url, dir_prefix="downloads", extract=True)
+        download = p.download(url, extract=True, dir_prefix="downloads", subdir_prefix="zip")
         downloads.append(download)
 
     file_paths = []
 
     for download in downloads:
-        file_path = download.get(timeout=5)  # wait until is fully downloaded
+        file_path = download.get()  # wait until is fully downloaded
         file_paths.append(file_path)
 
 print(file_paths)
