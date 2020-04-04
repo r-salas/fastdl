@@ -5,6 +5,7 @@
 #
 
 import os.path
+import mimetypes
 
 
 def splitext(path):
@@ -50,3 +51,17 @@ def lines(file_path, strip=True):
             if strip:
                 line = line.strip()
             yield line
+
+
+def guess_extension(content_type):
+    if content_type == "text/plain":
+        ext = ".txt"
+    else:
+        ext = mimetypes.guess_extension(content_type)
+
+    if ext == ".htm":
+        ext = ".html"
+    elif ext == ".jpe":
+        ext = ".jpg"
+
+    return ext

@@ -9,8 +9,8 @@ import warnings
 
 from .config import conf
 
-from .utils import splitext
 from .hasher import validate_file
+from .utils import splitext, guess_extension
 from .extractor import extract_file, can_extract
 
 from tqdm import tqdm
@@ -118,6 +118,13 @@ def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 *
         else:
             os.makedirs(dir_prefix, exist_ok=True)
             file_path = os.path.join(dir_prefix, fname)
+
+        _, extension = splitext(fname)
+
+        if not extension:
+            extension = guess_extension(headers.get_content_type())
+            if extension is not None:
+                file_path += extension
 
         if os.path.exists(file_path) and not force_download:
             if file_hash is not None and not validate_file(file_path, file_hash, hash_algorithm):
