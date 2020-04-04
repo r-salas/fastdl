@@ -107,6 +107,9 @@ def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 *
     with urlopen(request) as response:
         headers = response.info()
 
+        if callable(fname):
+            fname = fname(headers)
+
         if fname is None:
             fname = headers.get_filename()
 
