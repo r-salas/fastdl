@@ -125,7 +125,7 @@ def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 *
         _, extension = splitext(fname)
 
         if not extension:
-            extension = guess_extension(headers.get_content_type())
+            extension = guess_extension(headers.get_content_type() or "")
             if extension is not None:
                 file_path += extension
 
