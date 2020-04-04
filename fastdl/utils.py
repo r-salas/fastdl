@@ -7,6 +7,8 @@
 import os.path
 import mimetypes
 
+from urllib.parse import urlparse
+
 
 def splitext(path):
     """
@@ -54,6 +56,19 @@ def lines(file_path, strip=True):
 
 
 def guess_extension(content_type):
+    """
+    Guess extension
+
+    Parameters
+    -----------
+    content_type: str
+        MIME type
+
+    Returns
+    --------
+    str
+        Extension or None if not found
+    """
     if content_type == "text/plain":
         ext = ".txt"
     else:
@@ -65,3 +80,20 @@ def guess_extension(content_type):
         ext = ".jpg"
 
     return ext
+
+
+def filename_from_url(url):
+    """
+    Get filename from url
+
+    Parameters
+    ------------
+    url: str
+        Url to get filename
+
+    Returns
+    ---------
+    str
+        Filename
+    """
+    return os.path.basename(urlparse(url).path)

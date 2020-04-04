@@ -10,11 +10,10 @@ import warnings
 from .config import conf
 
 from .hasher import validate_file
-from .utils import splitext, guess_extension
 from .extractor import extract_file, can_extract
+from .utils import splitext, guess_extension, filename_from_url
 
 from tqdm import tqdm
-from urllib.parse import urlparse
 from urllib.request import urlopen, Request
 from urllib.error import ContentTooShortError
 
@@ -114,7 +113,7 @@ def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 *
             fname = headers.get_filename()
 
         if fname is None:
-            fname = os.path.basename(urlparse(url).path)
+            fname = filename_from_url(url)
 
         if os.path.isabs(fname):
             file_path = fname
