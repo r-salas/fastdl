@@ -107,7 +107,7 @@ def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 *
         headers = response.info()
 
         if callable(fname):
-            fname = fname(headers)
+            fname = fname(response)
 
         if fname is None:
             fname = headers.get_filename()
