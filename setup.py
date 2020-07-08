@@ -24,6 +24,11 @@ setuptools.setup(
     license=about["__license__"],
     packages=setuptools.find_packages(),
     python_requires=">=3.5",
+    keywords=[
+        "download",
+        "parallel",
+        "http"
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
