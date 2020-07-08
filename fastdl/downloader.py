@@ -47,7 +47,7 @@ def download(url, fname=None, dir_prefix=None, subdir_prefix="", headers=None, b
         Hash algorithm to validate file. Currently supported: "sha256", "sha1", "sha512", "md5".
         By default, it will try to infer algorithm according to the number of characters of the file
         hash.
-    extract: str
+    extract: bool
         Whether or not the file should be extracted. The currently supported extensions are the
         following: "zip", "tar", "tar.gz", "tar.bz2"
     extract_dir: str

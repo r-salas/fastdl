@@ -78,7 +78,7 @@ def _extract_tar(file_path, extract_dir=".", progressbar=True, force=False):
             iterator = tqdm(iterator, total=len(iterator), unit="", desc="Extracting files...")
 
         for member in iterator:
-            if not isfile(join(extract_dir, member)) or force:
+            if not isfile(join(extract_dir, member.name)) or force:
                 tarball.extract(member=member, path=extract_dir)
 
     return extract_dir
