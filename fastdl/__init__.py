@@ -1,3 +1,5 @@
+from .__version__ import __version__, __author__, __url__, __license__, __description__
+
 from . import utils  # noqa: F401
 
 from .config import conf  # noqa: F401
