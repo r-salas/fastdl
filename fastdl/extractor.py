@@ -7,7 +7,7 @@
 import zipfile
 import tarfile
 
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from os.path import isfile, join
 
 

@@ -6,7 +6,7 @@
 
 from .downloader import download
 
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from multiprocessing import Pool, cpu_count
 from multiprocessing.dummy import Pool as ThreadPool
 

@@ -13,7 +13,7 @@ from .hasher import validate_file
 from .extractor import extract_file, can_extract
 from .utils import splitext, guess_extension, filename_from_url
 
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from urllib.request import urlopen, Request
 from urllib.error import ContentTooShortError
 
