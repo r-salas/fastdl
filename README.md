@@ -48,6 +48,7 @@ with fastdl.Parallel(prefer="threads"):
 | `dir_prefix` | Directory to store download file. Used only if `fname` is not an absolute path. Defaults to current directory or value specified by `fastdl.conf["default_dir_prefix"]` | str | `None` |
 | `subdir_prefix` | Subdirectory inside `dir_prefix` to store download. Defaults to no subdirectory. | str | `""` |
 | `headers` | Dictionnary of HTTP headers to send. For example: `{"User-Agent": "fastdl/0.1"}` | dict | `{}` |
+| `content_disposition` | Used only if `fname` is None. If `True`, try to infer the filename from content disposition. If `False`, url will be used to infer filename. | bool | `False` |
 | `blocksize` | Number of bytes to read and write for each iteration | int | `8192` |
 | `file_hash` | File hash. If the file hash doesn't match, it will be re-downloaded. | str | `None` |
 | `hash_algorithm` | Hash algorithm. One of the following: `"sha256"`, `"sha512"`, `"sha1"`, `"md5"` or `auto`. By default, it will try to infer the algorithm according to the length of the `file_hash` | str | `auto` |
