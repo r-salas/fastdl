@@ -18,9 +18,9 @@ from urllib.request import urlopen, Request
 from urllib.error import ContentTooShortError
 
 
-def download(url, fname=None, dir_prefix=None, subdir_prefix="", headers=None, blocksize=1024 * 8, file_hash=None,
-             hash_algorithm="auto", extract=False, extract_dir=None, progressbar=True, force_download=False,
-             force_extraction=False):
+def download(url, fname=None, dir_prefix=None, subdir_prefix="", headers=None, content_disposition=False,
+             blocksize=1024 * 8, file_hash=None, hash_algorithm="auto", extract=False, extract_dir=None, timeout=None,
+             progressbar=True,  force_download=False, force_extraction=False):
     """
     Download files with support for extractions and hash validations.
 
@@ -39,6 +39,9 @@ def download(url, fname=None, dir_prefix=None, subdir_prefix="", headers=None, b
         Useful if configuration for "default_dir_prefix" is changed.
     headers: dict, optional
         Dictionnary of headers to send during request.
+    content_disposition: bool
+        Used only if `fname` is None. If true, try to infer the filename from content disposition. If false, url will
+        be used to infer filename.
     blocksize: int
         Response blocks to read / write for every iteration
     file_hash: str, optional
@@ -52,6 +55,8 @@ def download(url, fname=None, dir_prefix=None, subdir_prefix="", headers=None, b
         following: "zip", "tar", "tar.gz", "tar.bz2"
     extract_dir: str
         Directory to extract files. By default, the directory will be the same as the download file.
+    timeout: float, optional
+        Timeout for request.
     progressbar: bool
         Whether or not show progress bar.
     force_download: bool
@@ -69,9 +74,9 @@ def download(url, fname=None, dir_prefix=None, subdir_prefix="", headers=None, b
 
     fulldir_prefix = os.path.join(dir_prefix, subdir_prefix)
 
-    file_path = _urlretrieve(url, fname=fname, dir_prefix=fulldir_prefix, headers=headers, blocksize=blocksize,
-                             progressbar=progressbar, file_hash=file_hash, hash_algorithm=hash_algorithm,
-                             force_download=force_download)
+    file_path = _urlretrieve(url, fname=fname, dir_prefix=fulldir_prefix, content_disposition=content_disposition,
+                             headers=headers, blocksize=blocksize, progressbar=progressbar, file_hash=file_hash,
+                             hash_algorithm=hash_algorithm, force_download=force_download, timeout=timeout)
 
     if not extract:
         return file_path
@@ -90,8 +95,15 @@ def download(url, fname=None, dir_prefix=None, subdir_prefix="", headers=None, b
     return file_path
 
 
-def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 * 8, progressbar=True, reporthook=None,
-                 file_hash=None, hash_algorithm="auto", force_download=False):
+def _warn_about_different_hash(file_hash, hash_algorithm):
+    warnings.warn("A local file was found, but it seems to be incomplete or outdated because the " +
+                  hash_algorithm + " file hash does not match the original value of " + file_hash +
+                  " so we will re-download the data.")
+
+
+def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, content_disposition=False, blocksize=1024 * 8,
+                 timeout=None, progressbar=True, reporthook=None, file_hash=None, hash_algorithm="auto",
+                 force_download=False):
     """
     A more advance version of urllib.request.urlretrieve with support of progress bars,
     automatic file name, cache and file hash
@@ -101,9 +113,19 @@ def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 *
 
     dir_prefix = os.path.expanduser(dir_prefix)
 
+    if fname is None and not content_disposition:
+        fname = filename_from_url(url)
+
+    # Check if file already exists before doing any request
+    if fname is not None and os.path.exists(os.path.join(dir_prefix, fname)) and not force_download:
+        if file_hash is not None and not validate_file(os.path.join(dir_prefix, fname), file_hash, hash_algorithm):
+            _warn_about_different_hash(file_hash, hash_algorithm)
+        else:
+            return os.path.join(dir_prefix, fname)
+
     request = Request(url, headers=headers)
 
-    with urlopen(request) as response:
+    with urlopen(request, timeout=timeout) as response:
         headers = response.info()
 
         if callable(fname):
@@ -130,9 +152,7 @@ def _urlretrieve(url, fname=None, dir_prefix=".", headers=None, blocksize=1024 *
 
         if os.path.exists(file_path) and not force_download:
             if file_hash is not None and not validate_file(file_path, file_hash, hash_algorithm):
-                warnings.warn("A local file was found, but it seems to be incomplete or outdated because the " +
-                              hash_algorithm + " file hash does not match the original value of " + file_hash +
-                              " so we will re-download the data.")
+                _warn_about_different_hash(file_hash, hash_algorithm)
             else:
                 return file_path
 
