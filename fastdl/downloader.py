@@ -52,7 +52,7 @@ def download(url, fname=None, dir_prefix=None, subdir_prefix="", headers=None, b
         following: "zip", "tar", "tar.gz", "tar.bz2"
     extract_dir: str
         Directory to extract files. By default, the directory will be the same as the download file.
-    progressbar: str
+    progressbar: bool
         Whether or not show progress bar.
     force_download: bool
         Whether or not force download if file already exists.
@@ -71,7 +71,7 @@ def download(url, fname=None, dir_prefix=None, subdir_prefix="", headers=None, b
 
     file_path = _urlretrieve(url, fname=fname, dir_prefix=fulldir_prefix, headers=headers, blocksize=blocksize,
                              progressbar=progressbar, file_hash=file_hash, hash_algorithm=hash_algorithm,
-                             force_download=False)
+                             force_download=force_download)
 
     if not extract:
         return file_path
