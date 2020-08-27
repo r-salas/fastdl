@@ -1,4 +1,4 @@
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "Rubén Salas"
 __description__ = "Download and extract files fast and easily"
 __license__ = "MIT License"
