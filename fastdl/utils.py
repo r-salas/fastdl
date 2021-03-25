@@ -4,6 +4,7 @@
 #
 #
 
+import re
 import os.path
 import mimetypes
 
@@ -82,6 +83,11 @@ def guess_extension(content_type):
     return ext
 
 
+def get_valid_filename(s):
+    s = str(s).strip().replace(' ', '_')
+    return re.sub(r'(?u)[^-\w.]', '', s)
+
+
 def filename_from_url(url):
     """
     Get filename from url
@@ -96,4 +102,11 @@ def filename_from_url(url):
     str
         Filename
     """
-    return os.path.basename(urlparse(url).path)
+    parsed = urlparse(url)
+    last_path = os.path.basename(parsed.path)
+
+    if not last_path:
+        last_path = "index.html"
+
+    return get_valid_filename(last_path)
+
