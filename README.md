@@ -33,6 +33,7 @@ with fastdl.Parallel(prefer="threads"):
 
     for url in urls:
         download = p.download(url, dir_prefix="downloads") # same arguments
+        downloads.append(download)
 
     for download in downloads:
         file_path = download.get()  # block until download is finished
