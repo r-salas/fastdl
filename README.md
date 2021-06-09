@@ -28,7 +28,7 @@ file_path = fastdl.download(url, dir_prefix="downloads", extract=True)
 
 **Multiple files**
 ```py
-with fastdl.Parallel(prefer="threads"):
+with fastdl.Parallel(prefer="threads") as p:
     downloads = []
 
     for url in urls:
